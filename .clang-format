@@ -1,53 +1,53 @@
 ---
-Language: Cpp
-AccessModifierOffset: -2
-AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignEscapedNewlinesLeft: true
-AlignOperands: true
-AlignTrailingComments: false
-AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortBlocksOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: AllDefinitions
-AlwaysBreakTemplateDeclarations: true
-BinPackArguments: true
-BinPackParameters: true
-BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Custom
+Language: Cpp                // 指定代码语言为C++
+AccessModifierOffset: -2      // 指定访问修饰符偏移量为-2
+AlignAfterOpenBracket: Align  // 在打开的大括号后对齐
+AlignConsecutiveAssignments: false   // 不对齐连续的赋值语句
+AlignConsecutiveDeclarations: false  // 不对齐连续的声明语句
+AlignEscapedNewlinesLeft: true    // 左对齐转义字符后的换行符
+AlignOperands: true              // 对齐运算符
+AlignTrailingComments: false    // 不对齐尾部注释
+AllowAllParametersOfDeclarationOnNextLine: true   // 允许将声明的所有参数放在下一行
+AllowShortBlocksOnASingleLine: false   // 不允许将短块放在一行
+AllowShortCaseLabelsOnASingleLine: false  // 不允许将短的case标签放在一行
+AllowShortFunctionsOnASingleLine: None    // 不允许将短函数放在一行
+AllowShortIfStatementsOnASingleLine: false   // 不允许将短的if语句放在一行
+AllowShortLoopsOnASingleLine: false     // 不允许将短循环放在一行
+AlwaysBreakAfterReturnType: AllDefinitions   // 对于所有定义都在返回类型后进行换行
+AlwaysBreakTemplateDeclarations: true    // 总是在模板声明后进行换行
+BinPackArguments: true   // 参数打包
+BinPackParameters: true   // 参数打包
+BreakBeforeBinaryOperators: None  // 二元运算符之前不换行
+BreakBeforeBraces: Custom     // 定制的括号换行规则
 BraceWrapping:
-  AfterClass: true
-  AfterControlStatement: true
-  AfterFunction: true
-  AfterNamespace: false
-  AfterStruct: true
-  IndentBraces: true
-  BeforeElse: true
-BreakBeforeTernaryOperators: true
-BreakConstructorInitializersBeforeComma: false
-ColumnLimit: 100
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-Cpp11BracedListStyle: true
-DerivePointerAlignment: false
-IndentCaseLabels: false
-IndentWidth: 2
-NamespaceIndentation: None
-PointerAlignment: Right
-ReflowComments: false
-SortIncludes: false
-SpaceAfterCStyleCast: true
-SpaceAfterTemplateKeyword: true
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeParens: Always
-SpaceInEmptyParentheses: false
-SpacesInAngles:  false
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
-Standard: 'Cpp11'
-UseTab: Never
+  AfterClass: true   // 在类定义后换行
+  AfterControlStatement: true   // 在控制语句后换行
+  AfterFunction: true    // 在函数定义后换行
+  AfterNamespace: false  // 在命名空间定义后不换行
+  AfterStruct: true       //  在结构体定义后换行
+  IndentBraces: true      // 缩进括号
+  BeforeElse: true        // 在else关键字前换行
+BreakBeforeTernaryOperators: true    // 在三元运算符前换行
+BreakConstructorInitializersBeforeComma: false  // 在逗号前不换行
+ColumnLimit: 100  // 限制每行的字符数为100
+ConstructorInitializerAllOnOneLineOrOnePerLine: true   // 构造函数初始化器一行显示或每行一个
+Cpp11BracedListStyle: true  // 使用C++11风格的花括号列表
+DerivePointerAlignment: false  // 不使用指针对齐
+IndentCaseLabels: false   // 不缩进case标签
+IndentWidth: 2  // 缩进宽度为2个空格
+NamespaceIndentation: None  // 不缩进命名空间
+PointerAlignment: Right   // 指针对齐右边
+ReflowComments: false     // 不重新排列注释
+SortIncludes: false      // 不排序包含的头文件
+SpaceAfterCStyleCast: true   // C样式强制类型转换后有空格
+SpaceAfterTemplateKeyword: true  // 模板关键字后有空格
+SpaceBeforeAssignmentOperators: true  // 赋值运算符前有空格
+SpaceBeforeParens: Always   // 括号前总是有空格
+SpaceInEmptyParentheses: false  // 空括号内没有空格
+SpacesInAngles:  false  // 尖括号内没有空格
+SpacesInCStyleCastParentheses: false  // C样式强制类型转换的括号内没有空格
+SpacesInParentheses: false   // 括号内没有空格
+SpacesInSquareBrackets: false  // 方括号内没有空格
+Standard: 'Cpp11'  // 使用C++11标准
+UseTab: Never  // 不使用制表符
 ...
