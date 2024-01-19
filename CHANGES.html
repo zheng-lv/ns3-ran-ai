@@ -432,80 +432,82 @@ off the Werror behavior.</li>
 <h2>New API:</h2>
 <ul>
 <li>Added <code>Vector{2,3}D.GetLength ()</code>.</li>
-<li>Overloaded <code>operator+</code> and <code>operator-</code> for <code>Vector{2,3}D</code>.</li>
-<li>Added iterator version of WifiHelper::Install() to install Wi-Fi devices on range of nodes.</li>
-<li>Added a new attribute in TcpSocketBase to track the advertised window.</li>
-<li>Included the model of <b>TCP Ledbat</b>.</li>
-<li>Included the TCP SACK-based loss recovery algorithm outlined in RFC 6675.</li>
+<li>Overloaded <code>operator+</code> and <code>operator-</code> for <code>Vector{2,3}D</code>.</li><!-- 重载操作符 + 和操作符 for Vector {2,3} D -->
+<li>Added iterator version of WifiHelper::Install() to install Wi-Fi devices on range of nodes.</li><!-- 添加了 WifiHelper 的迭代器版本: : Install ()在节点范围内安装 Wi-Fi 设备 -->
+<li>Added a new attribute in TcpSocketBase to track the advertised window.</li><!-- 在 TcpSocketBase 中添加了一个新属性来跟踪公布的窗口。 -->
+<li>Included the model of <b>TCP Ledbat</b>.</li><!-- 包括 TCP Ledbat 模型-->
+<li>Included the TCP SACK-based loss recovery algorithm outlined in RFC 6675.</li><!-- 包括基于 TCP SACK 的丢失恢复算法在 RFC6675中概述。 -->
 <li>Added <b>TCP SACK</b> and the <b>SACK emulation</b>. Added an Attribute to TcpSocketBase class,
-    called "Sack", to enable or disable the SACK option usage.</li>
+    called "Sack", to enable or disable the SACK option usage.</li><!-- 增加了TCP SACK和SACK 模拟,称为“ SACK”，以启用或禁用 SACK 选项的使用。 -->
 <li>In 'src/wifi', several changes were made to enable partial <b>802.11ax</b> High Efficiency (HE) support:
     <ul>
-      <li>A new standard value has been added that enables the new 11ax data rates.</li>
-      <li>A new 11ax preamble has been added.</li>
-      <li>A new attribute was added to configure the guard interval duration for High Efficiency (HE) PHY entities. This attribute can be set using the YansWifiPhyHelper.</li>
+      <li>A new standard value has been added that enables the new 11ax data rates.</li><!-- 添加了一个新的标准值，使新的11ax 数据速率成为可能 -->
+      <li>A new 11ax preamble has been added.</li><!-- 增加了新的11ax 序言。 -->
+      <li>A new attribute was added to configure the guard interval duration for High Efficiency (HE) PHY entities. This attribute can be set using the YansWifiPhyHelper.</li><!--添加了一个新属性来配置高效物理实体的保护间隔持续时间。可以使用 YansWifiPhyHelper 设置此属性 -->
       <li>A new information element has been added:  HeCapabilities. This information element is added to the MAC frame header if the node is a HE node. This HeCapabilites information element is used to advertise the HE capabilities of the node to other nodes in the network.</li>
+   	 <!-- 添加了一个新的信息元素: HeCapability。如果节点是 HE 节点，则将此信息元素添加到 MAC 帧头。这个 HeCapability 信息元素用于向网络中的其他节点宣传该节点的 HE 能力。-->
     </ul>
 </li>
-<li> A new class were added for the RRPAA WiFi rate control mechanism.</li>
-<li>Included carrier aggregation feature in LTE module</li>
+<li> A new class were added for the RRPAA WiFi rate control mechanism.</li><!-- 为 RRPAA WiFi 速率控制机制增加了一个新类。 -->
+<li>Included carrier aggregation feature in LTE module</li><!-- LTE 模块中包含载波聚合特性 -->
     <ul>
       <li>LTE model is extended to support carrier aggregation feature according to 3GPP Release 10, for up to 5 component 
-      carriers. </li>
+      carriers. </li><!--根据3GPP 第10版，LTE 模型扩展为支持载波聚合功能，最多可支持5个组件携带者。 -->
       <li>InstallSingleEnbDevice and InstalSingeUeDevice functions of LteHelper are now constructing LteEnbDevice and LteUeDevice 
       according to CA architecture. Each device, UE and eNodeB contains an instance of component carrier manager, and may 
-      have several component carrier instances.</li>
-      <li>SAP interfaces are extended to include CA message exchange functionality.</li>
-      <li>RRC connection procedure is extended to allow RRC connection reconfiguration for the configuration of the secondary carriers.</li>
-      <li>RRC measurement reporting is extended to allow measurement reporting from the secondary carriers.</li>
-      <li>LTE traces are extended to include component carrier id.</li>
+      have several component carrier instances.</li><!-- 在正在构建 LteEnbDevice 和 LteUeDevice每个设备 UE 和 eNodeB 都包含一个组件载波管理器的实例，并且可以有几个组件载波实例。 -->
+      <li>SAP interfaces are extended to include CA message exchange functionality.</li><!-- 扩展了 SAP 接口以包括 CA 消息交换功能。结合句子的上下文，这句话的意思可能是：对 SAP 系统的接口进行了扩展，以使其包含用于与证书颁发机构（CA）进行消息交换的功能。这样的扩展可能是为了增强系统的安全性，使其能够与 CA 进行交互以获取和验证数字证书，从而确保系统之间的通信是安全和可信的 -->
+      <li>RRC connection procedure is extended to allow RRC connection reconfiguration for the configuration of the secondary carriers.</li><!-- 扩展了 RRC 连接过程，允许对次级载波的配置进行 RRC 连接重构 -->
+      <li>RRC measurement reporting is extended to allow measurement reporting from the secondary carriers.</li><!-- RRC 测量报告被扩展以允许来自次级载波的测量报告。 -->
+      <li>LTE traces are extended to include component carrier id.</li><!-- LTE 跟踪被扩展到包括组件载波 ID -->
     </ul>
 </li>
 <li>Function <b>PrintRoutingTable</b> has been extended to add an optional Time::Units
     parameter to specify the time units used on the report.  The new parameter is
     optional and if not specified defaults to the previous behavior (Time::S).
-</li>
-<li><b>TxopTrace</b>: new trace source exported by EdcaTxopN.</li>
+</li><!-- 函数PrintRoutingTable已经扩展为添加一个可选的 Time: : Unit参数指定报表上使用的时间单位。新参数为可选的，如果没有指定以前行为的默认值(时间: : S)。 -->
+<li><b>TxopTrace</b>: new trace source exported by EdcaTxopN.</li><!--TxopTrace: EdcaTxopN 导出的新跟踪源。 -->
 <li>A <b>GetDscpCounts</b> method is added to <b>Ipv4FlowClassifier</b> and <b>Ipv6FlowClassifier</b>
     which returns a vector of pairs (dscp,count), each of which indicates how many packets with the
     associated dscp value have been classified for a given flow.
-</li>
+</li><!-- 将 GetDscpCounts 方法添加到 Ipv4FlowClassfier 和 Ipv6FlowClassfier 它返回一个成对的向量(dscp、 count) ，每个向量指示具有关联的 dscp 值已经为给定的流分类。 -->
 <li>MqQueueDisc, a multi-queue aware queue disc modelled after the mq qdisc in Linux, has been introduced.
-</li>
+</li><!-- 介绍了 MqQueueDisc，这是一个仿照 Linux 中的 mqqdisk 建立的多队列感知队列磁盘。 -->
 <li>Two new methods, <b>QueueDisc::DropBeforeEnqueue()</b> and <b>QueueDisc::DropAfterDequeue()</b> have
     been introduced to replace <b>QueueDisc::Drop()</b>. These new methods require the caller to specify the
     reason why a packet was dropped. Correspondingly, two new trace sources ("DropBeforeEnqueue" and
     "DropAfterDequeue") have been added to the QueueDisc class, providing both the items that were dropped
     and the reason why they were dropped. 
-</li>
+</li><!-- 有两个新方法，QueueDisc: : DropBefore Enqueue ()和 QueueDisc: : DropAfterDequeue ()这些新方法要求调用者指定数据包丢失的原因。相应地，两个新的跟踪源(“ DropBeforeEnqueue”和“ DropAfterDequeue”)已添加到 QueueDisc 类中，提供了删除的两个项以及它们被丢弃的原因。 -->
 <li>Added <b>QueueDisc::GetStats()</b> which returns detailed statistics about the operations of
     a queue disc. Statistics can be accessed through the member variables of the returned object and
     by calling the <b>GetNDroppedPackets()</b>, <b>GetNDroppedBytes()</b>, <b>GetNMarkedPackets()</b> and <b>GetNMarkedBytes()</b> methods on the returned object. Such methods return the number of packets/bytes
     dropped/marked for the specified reason (passed as argument). Consequently:
+    <!--加了QueueDisc: : GetStats ()，它返回有关统计信息可以通过返回对象的成员变量和通过调用返回对象上的GetNDroppedPackets ()、GetNDroppedBytes () 、 < b > GetNMarkedPackets () 和etNMarkedBytes ()方法，这些方法返回包/字节数由于指定的原因(作为参数传递)被删除/标记，结果:-->
     <ul>
       <li>A number of methods of the QueueDisc class have been removed: <b>GetTotalReceivedPackets()</b>,
       <b>GetTotalReceivedBytes()</b>, <b>GetTotalDroppedPackets()</b>, <b>GetTotalDroppedBytes()</b>,
-      <b>GetTotalRequeuedPackets()</b>, <b>GetTotalRequeuedBytes()</b>.</li>
-      <li>The <b>Stats</b> struct and the <b>GetStats()</b> method of <b>RedQueueDisc</b> and <b>PieQueueDisc</b> have been removed and replaced by those of the QueueDisc base class.</li>
+      <b>GetTotalRequeuedPackets()</b>, <b>GetTotalRequeuedBytes()</b>.</li><!--QueueDisc 类的许多方法已被删除: GetTotalReceivedPackets () ,GetTotalReceivedBytes ()，GetTotalDroppedPackets ()，GetTotalDroppedBytes (),GetTotalRequeuedPackets ()，GetTotalRequeuedBytes () -->
+      <li>The <b>Stats</b> struct and the <b>GetStats()</b> method of <b>RedQueueDisc</b> and <b>PieQueueDisc</b> have been removed and replaced by those of the QueueDisc base class.</li><!--已经删除了Stats struct 和  RedQueueDisc和PieQueeueDisc 的 GetStats ()方法，并由 QueueDisc 基类的方法替换-->
       <li>The <b>GetDropOverLimit</b> and <b>GetDropCount</b> methods of <b>CoDelQueueDisc</b> have been removed.
       The values they returned can be obtained by calling, respectively,
       GetStats ().GetNDroppedPackets (CoDelQueueDisc::OVERLIMIT_DROP) and
       GetStats ().GetNDroppedPackets (CoDelQueueDisc::TARGET_EXCEEDED_DROP). The "DropCount" trace of
       <b>CoDelQueueDisc</b> has been removed as well. Packets dropped because the target is exceeded can
-      be obtained through the new "DropAfterDequeue" trace of the QueueDisc class.</li>
+      be obtained through the new "DropAfterDequeue" trace of the QueueDisc class.</li><!-- 已删除CoDelQueueDisc 的GetDropOverlimit和GetDropCount方法。它们返回的值可以通过分别调用,getStats () . GetNDroppedPackets (CoDelQueueDisc: : OVERLIMIT _ DROP)和GetStats () . GetNDroppedPackets (CoDelQueueDisc: : TARGET _ EXCEEDED _ DROP) CoDelQueueDisc也已删除。由于超过目标，数据包被丢弃通过 QueueDisc 类的新“ DropAfterDequeue”跟踪获取。 -->
     </ul>
 </li>
 <li> The new <b>QueueDisc::Mark()</b> method has been introduced to allow subclasses to request to mark a packet.
      The  caller must specify the reason why the packet must be marked. Correspondingly, a new trace source ("Mark")
      has been added to the QueueDisc class, providing both the items that were marked and the reason why they
      were marked.
-</li>
+</li><!-- 引入了新的 < b > QueueDisc: : Mark () </b > 方法，允许子类请求标记数据包。调用者必须指定必须标记数据包的原因。相应地，一个新的跟踪源(“ Mark”)已添加到 QueueDisc 类中，提供已标记的项以及它们被标记的原因被标记了。 -->
 <li>A new trace source, <b>SojournTime</b>, is exported by the QueueDisc base class to provide the
     sojourn time of every packet dequeued from a queue disc. This has been made possible by adding a
     timestamp to QueueDiscItem objects, which can be set/get through the new <b>GetTimeStamp()</b> and
     <b>SetTimeStamp()</b> methods of the QueueDiscItem class. The <b>CoDel</b> queue disc now makes use of such feature of the base class, hence its Sojourn trace source and the CoDelTimestampTag class
     have been removed.
-</li>
+</li><!-- QueueDisc 基类导出一个新的跟踪源SojournTime ，以提供每个从队列光盘中退出的数据包的逗留时间时间戳到 QueueDiscItem 对象，可以通过新的GetTimeStamp ()和SetTimeStamp ()QueueDiscItem 类的方法。CoDel队列光盘现在利用了基类的这种特性，因此它的 Sojourn 跟踪源和 CoDelTimestampTag 类已经被移除了。-->
 </ul>
 <h2>Changes to existing API:</h2>
 <ul>
@@ -513,23 +515,23 @@ off the Werror behavior.</li>
     the "Scale" Attribute have to be used instead.
     Changing the Mean attribute has no more an effect on the distribution.
     See the documentation for the relationship between Mean, Scale and Shape. 
-</li>
+</li><!-- 增加了新的11ax 序言。 -->
 <li>The default logging timestamp precision has been changed from 6 digits
     to 9 digits, with a fixed format to ensure that 9 digits to the right of
     the decimal point are always printed.  Previously, default C++ iostream
     precision and formatting was used.
-</li>
+</li><!-- 增加了新的11ax 序言。 -->
 <li>Abstract base class <b>WifiChannel</b> has been removed. As a result, a Channel type instead of a WifiChannel type
 is now exported by WifiNetDevice.</li>
 <li> The <b>GetPacketSize</b> method of <b>QueueItem</b> has been renamed <b>GetSize</b>
-</li>
+</li><!-- 增加了新的11ax 序言。 -->
 <li> The <b>DequeueAll</b> method of <b>Queue</b> has been renamed <b>Flush</b>
-</li>
+</li><!-- 增加了新的11ax 序言。 -->
 <li>The attributes <b>WifiPhy::TxAntennas</b> and <b>WifiPhy::RxAntennas</b>,
     and the related accessor methods, were replaced by <b>WifiPhy::MaxSupportedTxSpatialStreams</b>
     and <b>WifiPhy::MaxSupportedRxSpatialStreams</b>. A new attribute <b>WifiPhy::Antennas</b>
     was added to allow users to define the number of physical antennas on the device.
-</li>
+</li><!-- 增加了新的11ax 序言。 -->
 <li>Sockets do not receive anymore broadcast packets, unless they are bound to an "Any" address (0.0.0.0)
     or to a subnet-directed broadcast packet (e.g., x.y.z.0 for a /24 noterok).
     As in Linux, the following rules are now enforced:
