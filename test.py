@@ -29,19 +29,21 @@ import fnmatch
 
 from utils import get_list_from_file
 
-# imported from waflib Logs
+# imported from waflib Logs colors_lst 字典包含了一些颜色常量和对应的控制字符串，用于在输出中设置文本的颜色和样式。
 colors_lst={'USE':True,'BOLD':'\x1b[01;1m','RED':'\x1b[01;31m','GREEN':'\x1b[32m','YELLOW':'\x1b[33m','PINK':'\x1b[35m','BLUE':'\x1b[01;34m','CYAN':'\x1b[36m','GREY':'\x1b[37m','NORMAL':'\x1b[0m','cursor_on':'\x1b[?25h','cursor_off':'\x1b[?25l',}
+'''get_color(cl) 函数接受一个颜色常量作为参数，并根据 colors_lst 字典返回对应的颜色控制字符串。如果 USE 键的值为 True，则会根据给定的颜色常量返回相应的控制字符串；否则，返回空字符串。'''
 def get_color(cl):
     if colors_lst['USE']:
         return colors_lst.get(cl,'')
     return''
+'''color_dict 类通过 __getattr__ 和 __call__ 方法实现了动态获取和调用 get_color 函数的功能。可以通过访问 color_dict 对象的属性或调用它来获取颜色控制字符串。'''
 class color_dict(object):
     def __getattr__(self,a):
         return get_color(a)
     def __call__(self,a):
         return get_color(a)
 colors=color_dict()
-
+'''最后，代码尝试导入 queue 模块，但如果导入失败，会尝试导入 Queue 模块作为替代。'''
 try:
     import queue
 except ImportError:
@@ -56,6 +58,10 @@ except ImportError:
 # configuration phase and the corresponding assignments are usually
 # found in the associated subdirectory wscript files.
 #
+# XXX 这应该是列出配置的 waf 命令的一部分项目相对于可选的 ns-3件。
+# waf 配置中有趣的配置项列表缓存，我们可能会感兴趣的时候决定哪些例子
+# 以及如何运行它们配置阶段和相应的分配通常是
+# 在相关的子目录 wscript 文件中找到。
 interesting_config_items = [
     "NS3_ENABLED_MODULES",
     "NS3_ENABLED_CONTRIBUTED_MODULES",
@@ -94,21 +100,20 @@ PYTHON = ""
 VALGRIND_FOUND = True
 
 #
-# This will be given a prefix and a suffix when the waf config file is
-# read.
-#
+# This will be given a prefix and a suffix when the waf config file is read.
+#当读取 waf 配置文件时，将给它一个前缀和一个后缀。
 test_runner_name = "test-runner"
 
-#
-# If the user has constrained us to run certain kinds of tests, we can tell waf
-# to only build
+#如果用户强制我们运行某些类型的测试，我们可以告诉 waf 只构建
+# If the user has constrained us to run certain kinds of tests, we can tell waf to only build
 #
 core_kinds = ["core", "performance", "system", "unit"]
 
-#
-# There are some special cases for test suites that kill valgrind.  This is
-# because NSC causes illegal instruction crashes when run under valgrind.
-#
+#对于测试套件来说，有一些特殊的情况会杀死工具集
+# There are some special cases for test suites that kill valgrind.  
+# This is because NSC causes illegal instruction crashes when run under valgrind.
+#这是因为 NSC 导致非法指令崩溃时，运行在工具集。
+
 core_valgrind_skip_tests = [
     "ns3-tcp-cwnd",
     "nsc-tcp-loss",
@@ -127,8 +132,8 @@ core_valgrind_skip_tests = [
 ]
 
 #
-# There are some special cases for test suites that fail when NSC is
-# missing.
+# There are some special cases for test suites that fail when NSC is missing.
+# 当 NSC 丢失时，对于失败的测试套件有一些特殊情况。
 #
 core_nsc_missing_skip_tests = [
     "ns3-tcp-cwnd",
@@ -139,8 +144,8 @@ core_nsc_missing_skip_tests = [
 #
 # Parse the examples-to-run file if it exists.
 #
-# This function adds any C++ examples or Python examples that are to be run
-# to the lists in example_tests and python_tests, respectively.
+# This function adds any C++ examples or Python examples that are to be run to the lists in example_tests and python_tests, respectively.
+# 这个函数将任何 C + + 示例或 Python 示例分别添加到 example _ test 和 Python _ test 中的列表中。
 #
 def parse_examples_to_run_file(
     examples_to_run_path,
@@ -150,21 +155,21 @@ def parse_examples_to_run_file(
     example_names_original,
     python_tests):
 
-    # Look for the examples-to-run file exists.
+    # Look for the examples-to-run file exists.查找要运行的示例文件是否存在。
     if os.path.exists(examples_to_run_path):
 
-        # Each tuple in the C++ list of examples to run contains
+        # Each tuple in the C++ list of examples to run contains  要运行的 C++ 示例列表中的每个元组都包含
         #
         #     (example_name, do_run, do_valgrind_run)
+        # 
+        # where example_name is the executable to be run, do_run is a    其中 example_name 是要运行的可执行文件，do_run 是
+        # condition under which to run the example, and do_valgrind_run is    运行示例的条件，do_valgrind_run 是
+        # a condition under which to run the example under valgrind.  This     在 valgrind 下运行示例的条件。 这
+        # is needed because NSC causes illegal instruction crashes with      需要，因为 NSC 会导致非法指令崩溃
+        # some tests when they are run under valgrind.                在 valgrind 下运行时的一些测试。
         #
-        # where example_name is the executable to be run, do_run is a
-        # condition under which to run the example, and do_valgrind_run is
-        # a condition under which to run the example under valgrind.  This
-        # is needed because NSC causes illegal instruction crashes with
-        # some tests when they are run under valgrind.
-        #
-        # Note that the two conditions are Python statements that
-        # can depend on waf configuration variables.  For example,
+        # Note that the two conditions are Python statements that   请注意，这两个条件是 Python 语句
+        # can depend on waf configuration variables.  For example,   可以取决于 waf 配置变量。 例如，
         #
         #     ("tcp-nsc-lfn", "NSC_ENABLED == True", "NSC_ENABLED == False"),
         #
