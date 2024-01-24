@@ -1073,15 +1073,15 @@ class worker_thread(threading.Thread):
 #
 def run_tests():
     #
-    # Pull some interesting configuration information out of waf, primarily
-    # so we can know where executables can be found, but also to tell us what
-    # pieces of the system have been built.  This will tell us what examples
-    # are runnable.
+    # Pull some interesting configuration information out of waf, primarily so we can know where executables can be found, 
+    # 从 waf 中提取一些有趣的配置信息，这样我们就可以知道在哪里可以找到可执行文件,
+    # but also to tell us what pieces of the system have been built.  This will tell us what examples are runnable.
+    # 还要告诉我们系统的哪些部分已经建成。这将告诉我们哪些示例是可运行的。
     #
     read_waf_config()
 
     #
-    # Set the proper suffix.
+    # Set the proper suffix.  设置适当的后缀。
     #
     global BUILD_PROFILE_SUFFIX
     if BUILD_PROFILE == 'release':
@@ -1090,35 +1090,35 @@ def run_tests():
         BUILD_PROFILE_SUFFIX = "-" + BUILD_PROFILE
 
     #
-    # Add the proper prefix and suffix to the test-runner name to
-    # match what is done in the wscript file.
+    # Add the proper prefix and suffix to the test-runner name to match what is done in the wscript file.
+    # 向测试运行程序名称添加适当的前缀和后缀，以匹配在 wscript 文件中执行的操作。
     #
     test_runner_name = "%s%s-%s%s" % (APPNAME, VERSION, "test-runner", BUILD_PROFILE_SUFFIX)
 
     #
-    # Run waf to make sure that everything is built, configured and ready to go
-    # unless we are explicitly told not to.  We want to be careful about causing
-    # our users pain while waiting for extraneous stuff to compile and link, so
-    # we allow users that know what they''re doing to not invoke waf at all.
+    # Run waf to make sure that everything is built, configured and ready to go unless we are explicitly told not to.  运行 waf 以确保所有东西都已经构建、配置并准备好了，除非明确告诉我们不要这样做。
+    # We want to be careful about causing our users pain while waiting for extraneous stuff to compile and link,
+    # 我们希望在等待无关内容编译和链接时，小心不要给用户带来痛苦,因此，我们允许知道自己在做什么的用户根本不调用 waf。
+    #  so we allow users that know what they''re doing to not invoke waf at all.
     #
     if not options.nowaf:
 
         #
-        # If the user is running the "kinds" or "list" options, there is an
-        # implied dependency on the test-runner since we call that program
-        # if those options are selected.  We will exit after processing those
-        # options, so if we see them, we can safely only build the test-runner.
+        # If the user is running the "kinds" or "list" options, there is an implied dependency on the test-runner since we call that program if those options are selected.  
+        # 如果用户正在运行“ kind”或“ list”选项，则存在对测试运行程序的隐含依赖，因为如果选择了这些选项，我们将调用该程序。
+        # We will exit after processing those options, so if we see them, we can safely only build the test-runner.
+        # 我们将在处理这些选项后退出，因此如果我们看到它们，我们只能安全地构建测试运行程序。
         #
-        # If the user has constrained us to running only a particular type of
-        # file, we can only ask waf to build what we know will be necessary.
-        # For example, if the user only wants to run BVT tests, we only have
-        # to build the test-runner and can ignore all of the examples.
+        # If the user has constrained us to running only a particular type of file, we can only ask waf to build what we know will be necessary.
+        # 如果用户限制我们只能运行特定类型的文件，我们只能要求 waf 构建我们知道必要的文件。
+        # For example, if the user only wants to run BVT tests, we only have to build the test-runner and can ignore all of the examples.
+        # 例如，如果用户只想运行 BVT 测试，我们只需要构建测试运行程序，并且可以忽略所有示例。
         #
-        # If the user only wants to run a single example, then we can just build
-        # that example.
+        # If the user only wants to run a single example, then we can just build that example.
+        # 如果用户只想运行一个示例，那么我们可以构建该示例。
         #
-        # If there is no constraint, then we have to build everything since the
-        # user wants to run everything.
+        # If there is no constraint, then we have to build everything since the user wants to run everything.
+        # 如果没有约束，那么我们必须构建所有内容，因为用户希望运行所有内容。
         #
         if options.kinds or options.list or (len(options.constrain) and options.constrain in core_kinds):
             if sys.platform == "win32":
@@ -1147,12 +1147,12 @@ def run_tests():
 
 
     #
-    # Dynamically set up paths.
+    # Dynamically set up paths.  动态设置路径。
     #
     make_paths()
 
     #
-    # Get the information from the build status file.
+    # Get the information from the build status file.从构建状态文件中获取信息。
     #
     build_status_file = os.path.join(NS3_BUILDDIR, 'build-status.py')
     if os.path.exists(build_status_file):
@@ -1163,16 +1163,16 @@ def run_tests():
         sys.exit(2)
 
     #
-    # Make a dictionary that maps the name of a program to its path.
+    # Make a dictionary that maps the name of a program to its path. 创建一个将程序名映射到其路径的字典。
     #
     ns3_runnable_programs_dictionary = {}
     for program in ns3_runnable_programs:
-        # Remove any directory names from path.
+        # Remove any directory names from path. 从路径中删除任何目录名。
         program_name = os.path.basename(program)
         ns3_runnable_programs_dictionary[program_name] = program
 
-    # Generate the lists of examples to run as smoke tests in order to
-    # ensure that they remain buildable and runnable over time.
+    # Generate the lists of examples to run as smoke tests in order to ensure that they remain buildable and runnable over time.
+    # 生成要作为烟雾测试运行的示例列表，以确保它们随着时间的推移保持可构建和可运行。
     #
     example_tests = []
     example_names_original = []
@@ -1204,7 +1204,7 @@ def run_tests():
         cpp_executable_dir   = os.path.join(NS3_BUILDDIR, example_directory)
         python_script_dir    = os.path.join(example_directory)
 
-        # Parse this module's file.
+        # Parse this module's file. 解析这个模块的文件。
         parse_examples_to_run_file(
             examples_to_run_path,
             cpp_executable_dir,
@@ -1234,17 +1234,17 @@ def run_tests():
             python_tests)
 
     #
-    # If lots of logging is enabled, we can crash Python when it tries to
-    # save all of the text.  We just don't allow logging to be turned on when
-    # test.py runs.  If you want to see logging output from your tests, you
-    # have to run them using the test-runner directly.
+    # If lots of logging is enabled, we can crash Python when it tries to save all of the text.  如果启用了大量的日志记录，那么当 Python 试图保存所有文本时，我们可以使它崩溃。
+    # We just don't allow logging to be turned on when  test.py runs.   我们只是不允许在 test.py 运行时打开日志记录。
+    #If you want to see logging output from your tests, you have to run them using the test-runner directly.如果希望看到测试的日志输出，则必须直接使用测试运行程序运行它们。
+    # 
     #
     os.environ["NS_LOG"] = ""
 
     #
-    # There are a couple of options that imply we can to exit before starting
-    # up a bunch of threads and running tests.  Let's detect these cases and
-    # handle them without doing all of the hard work.
+    # There are a couple of options that imply we can to exit before starting up a bunch of threads and running tests.  有几个选项暗示我们可以在启动一堆线程和运行测试之前退出。
+    # Let's detect these cases and handle them without doing all of the hard work.让我们检测并处理这些案件，而不用做所有的艰苦工作。
+    # 
     #
     if options.kinds:
         path_cmd = os.path.join("utils", test_runner_name + " --print-test-type-list")
@@ -1506,31 +1506,31 @@ def run_tests():
             total_tests = total_tests + 1
 
     #
-    # We've taken care of the discovered or specified test suites.  Now we
-    # have to deal with examples run as smoke tests.  We have a list of all of
-    # the example programs it makes sense to try and run.  Each example will
-    # have a condition associated with it that must evaluate to true for us
-    # to try and execute it.  This is used to determine if the example has
-    # a dependency that is not satisfied.  For example, if an example depends
-    # on NSC being configured by waf, that example should have a condition
-    # that evaluates to true if NSC is enabled.  For example,
+    # We've taken care of the discovered or specified test suites.  我们已经处理了已发现或指定的测试套件。
+    # Now we have to deal with examples run as smoke tests. 现在我们必须处理作为烟雾测试运行的示例。 
+    # We have a list of all of the example programs it makes sense to try and run.  我们有一个所有示例程序的列表，尝试并运行它是有意义的。
+    # Each example will have a condition associated with it that must evaluate to true for us to try and execute it.  每个示例都有一个与之相关联的条件，该条件的计算结果必须为 true，我们才能尝试并执行它。
+    # This is used to determine if the example has a dependency that is not satisfied.  这用于确定示例是否具有不满足的依赖项。
+    # For example, if an example depends on NSC being configured by waf, that example should have a condition that evaluates to true if NSC is enabled.  
+    # 例如，如果一个示例依赖于通过 waf 配置的 NSC，那么该示例应该有一个条件，如果启用 NSC，则该条件的计算结果为 true。
+    # For example,
     #
     #      ("tcp-nsc-zoo", "NSC_ENABLED == True"),
     #
-    # In this case, the example "tcp-nsc-zoo" will only be run if we find the
-    # waf configuration variable "NSC_ENABLED" to be True.
+    # In this case, the example "tcp-nsc-zoo" will only be run if we find the waf configuration variable "NSC_ENABLED" to be True.
+    # 在本例中，只有当我们发现 waf 配置变量“ NSC _ ENABLED”为 True 时，示例“ tcp-NSC-zoo”才会运行。
     #
-    # We don't care at all how the trace files come out, so we just write them
-    # to a single temporary directory.
+    # We don't care at all how the trace files come out, so we just write them to a single temporary directory.
+    # 我们根本不关心跟踪文件是如何产生的，所以我们只是将它们写到一个临时目录中。
     #
-    # XXX As it stands, all of the trace files have unique names, and so file
-    # collisions can only happen if two instances of an example are running in
-    # two versions of the test.py process concurrently.  We may want to create
-    # uniquely named temporary traces directories to avoid this problem.
+    # XXX As it stands, all of the trace files have unique names, and so file collisions can only happen if two instances of an example are running in two versions of the test.py process concurrently.  
+    # 按照现在的情况，所有跟踪文件都有唯一的名称，因此只有当一个示例的两个实例同时在 test.py 进程的两个版本中运行时，才会发生文件冲突。
+    # We may want to create uniquely named temporary traces directories to avoid this problem.
+    # 我们可能需要创建唯一命名的临时跟踪目录来避免这个问题。
     #
-    # We need to figure out what examples to execute.  We are either given one
-    # suite or example explicitly via the --suite or --example option, or we
-    # need to walk the list of examples looking for available example
+    # We need to figure out what examples to execute.  We are either given one suite or example explicitly via the --suite or --example option,
+    # 我们需要弄清楚要执行哪些示例。我们可以获得一个套件，也可以通过—— kit 或—— example 选项显式地获得一个示例,或者我们需要在示例列表中查找可用的示例
+    #  or we need to walk the list of examples looking for available example
     # conditions.
     #
     # This translates into allowing the following options with respect to the
@@ -1712,8 +1712,8 @@ def run_tests():
             total_tests = total_tests + 1
 
     #
-    # Tell the worker threads to pack up and go home for the day.  Each one
-    # will exit when they see their is_break task.
+    # Tell the worker threads to pack up and go home for the day.  告诉工人们收拾东西回家休息一天。
+    # Each one will exit when they see their is_break task. 每一个都将在看到它们的 is _ break 任务时退出。
     #
     for i in range(processors):
         job = Job()
@@ -1721,14 +1721,14 @@ def run_tests():
         input_queue.put(job)
 
     #
-    # Now all of the tests have been dispatched, so all we have to do here
-    # in the main thread is to wait for them to complete.  Keyboard interrupt
-    # handling is broken as mentioned above.  We use a signal handler to catch
-    # sigint and set a global variable.  When the worker threads sense this
-    # they stop doing real work and will just start throwing jobs back at us
-    # with is_break set to True.  In this case, there are no real results so we
-    # ignore them.  If there are real results, we always print PASS or FAIL to
-    # standard out as a quick indication of what happened.
+    # Now all of the tests have been dispatched, so all we have to do here in the main thread is to wait for them to complete.  现在所有的测试都已经发送完毕，所以我们在主线程中要做的就是等待它们完成。
+    # Keyboard interrupt handling is broken as mentioned above.  如上所述，键盘中断处理中断。
+    # We use a signal handler to catch sigint and set a global variable.  我们使用一个信号处理器来捕捉信号并设置一个全局变量
+    # When the worker threads sense this they stop doing real work and will just start throwing jobs back at us with is_break set to True.  
+    # 当工作线程感觉到这一点时，它们就停止做实际的工作，并开始用 is _ break 设置为 True 向我们返回作业。
+    # In this case, there are no real results so we ignore them.  在这种情况下，没有真正的结果，所以我们忽略它们。
+    # If there are real results, we always print PASS or FAIL to standard out as a quick indication of what happened.如果有真正的结果，我们总是打印 PASS 或 FAIL 标准出来，作为发生了什么的快速指示。
+    # 
     #
     passed_tests = 0
     failed_tests = 0
@@ -1811,30 +1811,30 @@ def run_tests():
 
         else:
             #
-            # If we're not running an example, we're running a test suite.
-            # These puppies are running concurrently and generating output
-            # that was written to a temporary file to avoid collisions.
+            # If we're not running an example, we're running a test suite.如果我们不运行一个例子，我们运行一个测试套件。
+            # These puppies are running concurrently and generating output that was written to a temporary file to avoid collisions.这些小程序并发运行并生成写入临时文件的输出，以避免冲突。
+            # 
             #
-            # Now that we are executing sequentially in the main thread, we can
-            # concatenate the contents of the associated temp file to the main
-            # results file and remove that temp file.
+            # Now that we are executing sequentially in the main thread, we can concatenate the contents of the associated temp file to the main results file and remove that temp file.
+            # 现在我们在主线程中按顺序执行，我们可以将相关联的临时文件的内容连接到主结果文件并删除该临时文件。
+            # 
             #
-            # One thing to consider is that a test suite can crash just as
-            # well as any other program, so we need to deal with that
-            # possibility as well.  If it ran correctly it will return 0
-            # if it passed, or 1 if it failed.  In this case, we can count
-            # on the results file it saved being complete.  If it crashed, it
-            # will return some other code, and the file should be considered
-            # corrupt and useless.  If the suite didn't create any XML, then
-            # we're going to have to do it ourselves.
+            # One thing to consider is that a test suite can crash just as well as any other program, so we need to deal with that possibility as well.  
+            # 需要考虑的一件事是，一个测试套件可能像其他任何程序一样崩溃，因此我们也需要处理这种可能性。
+            # If it ran correctly it will return 0 if it passed, or 1 if it failed.  如果运行正确，它将返回0如果它通过，或1如果它失败。
+            # In this case, we can count on the results file it saved being complete.  
+            # If it crashed, it  will return some other code, and the file should be considered corrupt and useless.  如果它崩溃了，它将返回一些其他的代码，并且文件应该被认为是损坏的和无用的。
             #
-            # Another issue is how to deal with a valgrind error.  If we run
-            # a test suite under valgrind and it passes, we will get a return
-            # code of 0 and there will be a valid xml results file since the code
-            # ran to completion.  If we get a return code of 1 under valgrind,
-            # the test case failed, but valgrind did not find any problems so the
-            # test case return code was passed through.  We will have a valid xml
-            # results file here as well since the test suite ran.  If we see a
+            # If the suite didn't create any XML, then we're going to have to do it ourselves.
+            # 如果这个套件没有创建任何 XML，那么我们将不得不自己动手。
+            #
+            # Another issue is how to deal with a valgrind error.  另外一个问题是如何处理 valground 错误。
+            # If we run a test suite under valgrind and it passes, we will get a return code of 0 and there will be a valid xml results file since the code ran to completion.  
+            # 如果我们运行了一个测试套件，它通过，我们将得到一个0的返回代码，并且将有一个有效的 xml 结果文件，因为代码运行到完成。
+            # If we get a return code of 1 under valgrind,the test case failed, but valgrind did not find any problems so the test case return code was passed through.  
+            # 如果我们得到的返回代码是1，那么测试用例失败了，但是 val弓没有发现任何问题，所以测试用例返回代码被传递了。
+            # We will have a valid xml results file here as well since the test suite ran. 自从测试套件运行以来，这里也有一个有效的 xml 结果文件。
+            # If we see a
             # return code of 2, this means that valgrind found an error (we asked
             # it to return 2 if it found a problem in run_job_synchronously) but
             # the suite ran to completion so there is a valid xml results file.
@@ -1854,6 +1854,21 @@ def run_tests():
             # fails valgrind, we'll see the PASS entry for the working TestSuite
             # followed by a VALGR failing test suite of the same name.
             #
+            '''这段代码注释描述了在运行测试套件时处理Valgrind错误的策略。Valgrind是一个用于检测内存泄漏和内存错误的工具，而这段注释主要关注在测试套件运行中的Valgrind返回代码和结果文件的处理。
+                
+                1. **Valgrind返回代码的解释：**
+                   - 如果Valgrind返回代码是0，表示测试套件通过，并且有一个有效的XML结果文件，因为代码正常运行完成。
+                   - 如果返回代码是1，表示测试用例失败，但Valgrind未发现问题，所以测试用例的返回代码被传递。同样，会有一个有效的XML结果文件。
+                   - 如果返回代码是2，表示Valgrind发现了错误，但测试套件仍然正常运行，因此同样存在一个有效的XML结果文件。
+                
+                2. **其他Valgrind返回代码的处理：**
+                   - 如果Valgrind返回代码不是0、1或2，说明发生了一些异常情况，如测试套件崩溃或Valgrind由于非法指令而崩溃。在这种情况下，无法确定发生了什么，但为了表示发生了崩溃，会伪造一个XML条目。
+                
+                3. **VALGR结果的处理：**
+                   - 无论上述情况如何，最终需要指示Valgrind错误，因此会伪造一个带有VALGR结果的XML条目。这确保在测试通过但Valgrind失败的情况下，会在结果中看到通过的测试套件后跟着同名的Valgrind失败的测试套件。
+                
+                这种处理策略确保在测试过程中能够有效地处理Valgrind的不同返回情况，同时生成一致的XML结果文件，以便更好地了解测试套件的执行状态。
+            '''
             if job.is_skip:
                 f = open(xml_results_file, 'a')
                 f.write("<Test>\n")
@@ -1964,6 +1979,17 @@ def run_tests():
     # directory we just created.  We don't want to happily delete any retained
     # directories, which will probably surprise the user.
     #
+    '''这段注释描述了在处理临时文件时的删除策略。根据注释内容，删除策略分为两种情况：
+        1. **保留所有小临时文件：**
+           - 如果程序被要求保留所有小临时文件，则不会删除 `tm` 目录。
+           - 换句话说，如果存在指令要求保留所有生成的临时文件，那么不会执行删除操作。   
+        2. **仅删除刚创建的目录：**
+           - 如果程序不需要保留所有小临时文件，只删除刚创建的目录。
+           - 这意味着在其他情况下，仅删除最近创建的临时目录，而不删除任何已经被指示保留的目录。
+           - 避免意外删除用户可能希望保留的目录，确保删除操作不会影响保留的目录。        
+        这种删除策略的设计是为了平衡在测试或程序运行过程中产生的临时文件的管理。如果用户明确要求保留这些文件，系统会保留它们；
+        否则，系统会删除其中一些，但不会删除用户可能希望保留的文件。这有助于避免对用户的不必要干扰和意外删除可能有用的文件。
+    '''
     if not options.retain:
         shutil.rmtree(testpy_output_dir)
 
