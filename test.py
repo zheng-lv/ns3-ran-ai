@@ -271,8 +271,8 @@ def read_test(test):
     return (result, name, reason, time_real)
 
 #
-# A simple example of writing a text file with a test result summary.  It is
-# expected that this output will be fine for developers looking for problems.
+# A simple example of writing a text file with a test result summary.  It is expected that this output will be fine for developers looking for problems.
+# 使用测试结果摘要编写文本文件的简单示例。预计对于寻找问题的开发人员来说，这个输出将是很好的。
 #
 def node_to_text(test, f, test_type='Suite'):
     (result, name, reason, time_real) = read_test(test)
@@ -315,10 +315,10 @@ def translate_to_text(results_file, text_file):
     print('done.')
 
 #
-# A simple example of writing an HTML file with a test result summary.  It is
-# expected that this will eventually be made prettier as time progresses and
-# we have time to tweak it.  This may end up being moved to a separate module
-# since it will probably grow over time.
+# A simple example of writing an HTML file with a test result summary.  使用测试结果摘要编写 HTML 文件的简单示例。
+# It is expected that this will eventually be made prettier as time progresses and we have time to tweak it.  预计随着时间的推移，这将最终变得更漂亮，我们有时间来调整它。
+# This may end up being moved to a separate module since it will probably grow over time.这可能最终被移动到一个单独的模块，因为它可能会随着时间的推移而增长。
+# 
 #
 def translate_to_html(results_file, html_file):
     html_file += '.html'
@@ -335,20 +335,20 @@ def translate_to_html(results_file, html_file):
     et = ET.parse(results_file)
 
     #
-    # Iterate through the test suites
+    # Iterate through the test suites 迭代测试套件
     #
     f.write("<h2>Test Suites</h2>\n")
     for suite in et.findall('Test'):
         #
-        # For each test suite, get its name, result and execution time info
+        # For each test suite, get its name, result and execution time info 对于每个测试套件，获取它的名称、结果和执行时间信息
         #
         (result, name, reason, time) = read_test(suite)
 
         #
-        # Print a level three header with the result, name and time.  If the
-        # test suite passed, the header is printed in green. If the suite was
-        # skipped, print it in orange, otherwise assume something bad happened
-        # and print in red.
+        # Print a level three header with the result, name and time.   打印一个包含结果、名称和时间的第三级标题。
+        # If the test suite passed, the header is printed in green. 如果测试套件通过，标题将以绿色打印。
+        #  If the suite was skipped, print it in orange, otherwise assume something bad happened and print in red.
+        # 如果套件被跳过，则将其打印为橙色，否则假设发生了不好的事情，并将其打印为红色。
         #
         if result == "PASS":
             f.write("<h3 style=\"color:green\">%s: %s (%s)</h3>\n" % (result, name, time))
@@ -358,7 +358,7 @@ def translate_to_html(results_file, html_file):
             f.write("<h3 style=\"color:red\">%s: %s (%s)</h3>\n" % (result, name, time))
 
         #
-        # The test case information goes in a table.
+        # The test case information goes in a table. 测试用例信息放在一个表中。
         #
         f.write("<table border=\"1\">\n")
 
@@ -368,8 +368,8 @@ def translate_to_html(results_file, html_file):
         f.write("<th> Result </th>\n")
 
         #
-        # If the suite crashed or is skipped, there is no further information, so just
-        # declare a new table row with the result (CRASH or SKIP) in it.  Looks like:
+        # If the suite crashed or is skipped, there is no further information, so just如果套件崩溃或被跳过，没有进一步的信息，所以只需
+        # declare a new table row with the result (CRASH or SKIP) in it.  Looks like:   声明一个包含结果(CRASH 或 SKIP)的新表行。
         #
         #   +--------+
         #   | Result |
@@ -390,8 +390,8 @@ def translate_to_html(results_file, html_file):
             continue
 
         #
-        # If the suite didn't crash, we expect more information, so fill out
-        # the table heading row.  Like,
+        # If the suite didn't crash, we expect more information, so fill out the table heading row.  如果套件没有崩溃，我们希望获得更多信息，所以请填写表格标题行。
+        # Like,
         #
         #   +--------+----------------+------+
         #   | Result | Test Case Name | Time |
@@ -401,8 +401,8 @@ def translate_to_html(results_file, html_file):
         f.write("<th> Time </th>\n")
 
         #
-        # If the test case failed, we need to print out some failure details
-        # so extend the heading row again.  Like,
+        # If the test case failed, we need to print out some failure details so extend the heading row again.  如果测试用例失败，我们需要打印出一些失败的详细信息，以便再次扩展标题行。
+        # Like,
         #
         #   +--------+----------------+------+-----------------+
         #   | Result | Test Case Name | Time | Failure Details |
@@ -417,8 +417,8 @@ def translate_to_html(results_file, html_file):
         for case in suite.findall('Test'):
 
             #
-            # Get the name, result and timing information from xml to use in
-            # printing table below.
+            # Get the name, result and timing information from xml to use in printing table below.
+            # 从 xml 中获取名称、结果和计时信息，以便在下面的打印表格中使用。
             #
             (result, name, reason, time) = read_test(case)
 
