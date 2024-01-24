@@ -428,10 +428,10 @@ def translate_to_html(results_file, html_file):
             #
             if result == "FAIL":
                 #
-                # There can be multiple failures for each test case.  The first
-                # row always gets the result, name and timing information along
-                # with the failure details.  Remaining failures don't duplicate
-                # this information but just get blanks for readability.  Like,
+                # There can be multiple failures for each test case.   每个测试用例可能有多个失败。
+                # The first row always gets the result, name and timing information along with the failure details. 第一行始终获取结果、名称和计时信息以及故障详细信息。
+                # Remaining failures don't duplicate this information but just get blanks for readability.  剩下的故障不会重复这些信息，只是为了可读性而得到空格。
+                # Like,
                 #
                 #   +--------+----------------+------+-----------------+
                 #   | Result | Test Case Name | Time | Failure Details |
@@ -448,7 +448,7 @@ def translate_to_html(results_file, html_file):
                 for details in case.findall('FailureDetails'):
 
                     #
-                    # Start a new row in the table for each possible Failure Detail
+                    # Start a new row in the table for each possible Failure Detail 为每个可能的失败详细信息在表中启动一个新行
                     #
                     f.write("<tr>\n")
 
@@ -478,7 +478,7 @@ def translate_to_html(results_file, html_file):
             else:
                 #
                 # If this particular test case passed, then we just print the PASS result in green, followed by the test case name and its execution time information. 
-                # 
+                # 如果这个特定的测试用例通过了，那么我们只需将 PASS 结果打印成绿色，然后打印测试用例名称及其执行时间信息。
                 #  These go off in <td> ... </td> table data.
                 # The details table entry is left blank.
                 #
@@ -495,23 +495,23 @@ def translate_to_html(results_file, html_file):
                 f.write("<td>%s</td>\n" % reason)
                 f.write("</tr>\n")
         #
-        # All of the rows are written, so we need to end the table.
+        # All of the rows are written, so we need to end the table. 所有行都已写入，因此我们需要结束表。
         #
         f.write("</table>\n")
 
     #
-    # That's it for all of the test suites.  Now we have to do something about
-    # our examples.
+    # That's it for all of the test suites.   所有的测试套件都是这样的。
+    # Now we have to do something about our examples.  现在我们必须对我们的例子做些什么。
     #
     f.write("<h2>Examples</h2>\n")
 
     #
-    # Example status is rendered in a table just like the suites.
+    # Example status is rendered in a table just like the suites. 示例状态在表中呈现，就像套件一样。
     #
     f.write("<table border=\"1\">\n")
 
     #
-    # The table headings look like,
+    # The table headings look like, 表格的标题看起来像,
     #
     #   +--------+--------------+--------------+---------+
     #   | Result | Example Name | Elapsed Time | Details |
@@ -582,10 +582,10 @@ def translate_to_html(results_file, html_file):
     print('done.')
 
 #
-# Python Control-C handling is broken in the presence of multiple threads.
-# Signals get delivered to the runnable/running thread by default and if
-# it is blocked, the signal is simply ignored.  So we hook sigint and set
-# a global variable telling the system to shut down gracefully.
+# Python Control-C handling is broken in the presence of multiple threads. 当存在多个线程时，Python Control-C 处理会中断。
+# Signals get delivered to the runnable/running thread by default and if it is blocked, the signal is simply ignored.  默认情况下，信号被传递到可运行/正在运行的线程，如果它被阻塞，信号就会被忽略。
+# So we hook sigint and set a global variable telling the system to shut down gracefully.
+# 所以我们钩住 sigint 并设置一个全局变量，告诉系统优雅地关闭。
 #
 thread_exit = False
 
@@ -596,25 +596,25 @@ def sigint_hook(signal, frame):
 
 
 #
-# In general, the build process itself naturally takes care of figuring out
-# which tests are built into the test runner.  For example, if waf configure
-# determines that ENABLE_EMU is false due to some missing dependency,
-# the tests for the emu net device simply will not be built and will
-# therefore not be included in the built test runner.
+# In general, the build process itself naturally takes care of figuring out which tests are built into the test runner.  一般来说，构建过程本身会很自然地确定哪些测试被构建到测试运行程序中。
+# For example, if waf configure determines that ENABLE_EMU is false due to some missing dependency,
+# 例如，如果 waf configure 确定 ENABLE _ EMU 由于缺少某些依赖项而为 false,Emu 网络设备的测试根本不会被构建，因此不会包括在构建的测试流道中。
+# the tests for the emu net device simply will not be built and will therefore not be included in the built test runner.
+# 
 #
-# Examples, however, are a different story.  In that case, we are just given
-# a list of examples that could be run.  Instead of just failing, for example,
-# nsc-tcp-zoo if NSC is not present, we look into the waf saved configuration
-# for relevant configuration items.
+# Examples, however, are a different story.  然而，例子就不同了。
+# In that case, we are just given a list of examples that could be run.  在这种情况下，我们只获得了一个可以运行的示例列表。
+# Instead of just failing, for example, nsc-tcp-zoo if NSC is not present, we look into the waf saved configuration for relevant configuration items.
+#例如，如果 NSC 不存在，则不仅仅是失败，我们将查看相关配置项的 waf 保存的配置。
 #
-# XXX This function pokes around in the waf internal state file.  To be a
-# little less hacky, we should add a command to waf to return this info
-# and use that result.
+# XXX This function pokes around in the waf internal state file.  XXX 此函数在 waf 内部状态文件中查找。
+# To be a little less hacky, we should add a command to waf to return this info  and use that result.
+# 为了不那么蹩脚，我们应该向 waf 添加一个命令来返回这个信息并使用这个结果。
 #
 def read_waf_config():
     f = None
     try:
-        # sys.platform reports linux2 for python2 and linux for python3
+        # sys.platform reports linux2 for python2 and linux for python3 Platform 报告用于 python2的 linux2和用于 python3的 linux
         f = open(".lock-waf_" + sys.platform + "_build", "rt")
     except FileNotFoundError:
         try:
