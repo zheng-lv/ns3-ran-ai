@@ -614,7 +614,7 @@ def sigint_hook(signal, frame):
 def read_waf_config():
     f = None
     try:
-        # sys.platform reports linux2 for python2 and linux for python3 Platform 报告用于 python2的 linux2和用于 python3的 linux
+        # sys.platform reports linux2 for python2 and linux for python3 Platform 报告用于 python2的 linux2和用于 python3的 linux Platform 报告用于 python2的 linux2和用于 python3的 linux
         f = open(".lock-waf_" + sys.platform + "_build", "rt")
     except FileNotFoundError:
         try:
@@ -644,22 +644,27 @@ def read_waf_config():
             print("%s ==" % item, eval(item))
 
 #
-# It seems pointless to fork a process to run waf to fork a process to run
-# the test runner, so we just run the test runner directly.  The main thing
-# that waf would do for us would be to sort out the shared library path but
-# we can deal with that easily and do here.
+# It seems pointless to fork a process to run waf to fork a process to run the test runner, so we just run the test runner directly.  
+# 让一个进程运行 waf，让另一个进程运行测试运行程序似乎毫无意义，所以我们只是直接运行测试运行程序。
+# The main thing that waf would do for us would be to sort out the shared library path but we can deal with that easily and do here.
+# Waf 将为我们做的主要事情是整理出共享库路径，但是我们可以很容易地处理这个问题，在这里就可以做到。
+# 
 #
-# There can be many different ns-3 repositories on a system, and each has
-# its own shared libraries, so ns-3 doesn't hardcode a shared library search
-# path -- it is cooked up dynamically, so we do that too.
+# There can be many different ns-3 repositories on a system, and each has its own shared libraries, so ns-3 doesn't hardcode a shared library search ath -- it is cooked up dynamically, so we do that too.
+# 一个系统上可以有许多不同的 ns-3存储库，每个存储库都有自己的共享库，所以 ns-3不会硬编码一个共享库搜索 ath ——它是动态编写的，所以我们也这样做。
+# p
 #
 def make_paths():
+    # 标志，用于检查特定的环境变量是否已存在
     have_DYLD_LIBRARY_PATH = False
     have_LD_LIBRARY_PATH = False
     have_PATH = False
     have_PYTHONPATH = False
 
+    # 获取所有环境变量名称的列表
     keys = list(os.environ.keys())
+
+    # 检查特定的环境变量是否存在
     for key in keys:
         if key == "DYLD_LIBRARY_PATH":
             have_DYLD_LIBRARY_PATH = True
@@ -670,60 +675,72 @@ def make_paths():
         if key == "PYTHONPATH":
             have_PYTHONPATH = True
 
+    # 将 PYTHONPATH 设置为基于 NS3_BUILDDIR 的特定路径
     pypath = os.environ["PYTHONPATH"] = os.path.join(NS3_BUILDDIR, "bindings", "python")
 
+    # 更新 PYTHONPATH，如果不存在则创建
     if not have_PYTHONPATH:
         os.environ["PYTHONPATH"] = pypath
     else:
         os.environ["PYTHONPATH"] += ":" + pypath
 
+    # 如果启用了详细输出选项，打印 PYTHONPATH
     if options.verbose:
         print("os.environ[\"PYTHONPATH\"] == %s" % os.environ["PYTHONPATH"])
 
+    # 根据操作系统设置额外的环境变量
     if sys.platform == "darwin":
+         # 初始化或追加到 DYLD_LIBRARY_PATH
         if not have_DYLD_LIBRARY_PATH:
             os.environ["DYLD_LIBRARY_PATH"] = ""
         for path in NS3_MODULE_PATH:
             os.environ["DYLD_LIBRARY_PATH"] += ":" + path
+        # 如果启用了详细输出选项，打印 DYLD_LIBRARY_PATH
         if options.verbose:
             print("os.environ[\"DYLD_LIBRARY_PATH\"] == %s" % os.environ["DYLD_LIBRARY_PATH"])
-    elif sys.platform == "win32":
+    elif sys.platform == "win32": # Windows
+        # 初始化或追加到 PATH
         if not have_PATH:
             os.environ["PATH"] = ""
         for path in NS3_MODULE_PATH:
             os.environ["PATH"] += ';' + path
+        # 如果启用了详细输出选项，打印 PATH
         if options.verbose:
             print("os.environ[\"PATH\"] == %s" % os.environ["PATH"])
-    elif sys.platform == "cygwin":
+    elif sys.platform == "cygwin":# Cygwin（Windows 上的类 Unix 环境）
+        # 初始化或追加到 PATH
         if not have_PATH:
             os.environ["PATH"] = ""
         for path in NS3_MODULE_PATH:
             os.environ["PATH"] += ":" + path
+        # 如果启用了详细输出选项，打印 PATH
         if options.verbose:
             print("os.environ[\"PATH\"] == %s" % os.environ["PATH"])
-    else:
+    else:  # 其他类 Unix 平台
+        # 初始化或追加到 LD_LIBRARY_PATH
         if not have_LD_LIBRARY_PATH:
             os.environ["LD_LIBRARY_PATH"] = ""
         for path in NS3_MODULE_PATH:
             os.environ["LD_LIBRARY_PATH"] += ":" + str(path)
+        # 如果启用了详细输出选项，打印 LD_LIBRARY_PATH
         if options.verbose:
             print("os.environ[\"LD_LIBRARY_PATH\"] == %s" % os.environ["LD_LIBRARY_PATH"])
 
 #
 # Short note on generating suppressions:
+#关于产生抑制的简短说明:
+# See the valgrind documentation for a description of suppressions.  有关抑制的描述，请参阅 valgray 文档。
+# The easiest way to generate a suppression expression is by using the valgrind --gen-suppressions option. 生成抑制表达式的最简单方法是使用 valgrind --gen-suppressions option.
+# To do that you have to figure out how to run the test in question.要做到这一点，你必须弄清楚如何运行有问题的测试。
+# 
 #
-# See the valgrind documentation for a description of suppressions.  The easiest
-# way to generate a suppression expression is by using the valgrind
-# --gen-suppressions option.  To do that you have to figure out how to run the
-# test in question.
-#
-# If you do "test.py -v -g -s <suitename> then test.py will output most of what
-# you need.  For example, if you are getting a valgrind error in the
-# devices-mesh-dot11s-regression test suite, you can run:
+# If you do "test.py -v -g -s <suitename> then test.py will output most of what you need.  如果您执行“ test.py-v-g-s < suitename >”，那么 test.py 将输出您需要的大部分内容。
+# For example, if you are getting a valgrind error in the devices-mesh-dot11s-regression test suite, you can run:
+# 例如，如果您在设备 Mesh-dot11s-回归测试套件中得到了 valgray 错误，您可以运行:
 #
 #   ./test.py -v -g -s devices-mesh-dot11s-regression
 #
-# You should see in the verbose output something that looks like:
+# You should see in the verbose output something that looks like:您应该在详细输出中看到如下内容:
 #
 #   Synchronously execute valgrind --suppressions=/home/craigdo/repos/ns-3-allinone-dev/ns-3-dev/testpy.supp
 #   --leak-check=full --error-exitcode=2 /home/craigdo/repos/ns-3-allinone-dev/ns-3-dev/build/debug/utils/ns3-dev-test-runner-debug
@@ -731,19 +748,19 @@ def make_paths():
 #   --tempdir=testpy-output/2010-01-12-22-47-50-CUT
 #   --out=testpy-output/2010-01-12-22-47-50-CUT/devices-mesh-dot11s-regression.xml
 #
-# You need to pull out the useful pieces, and so could run the following to
-# reproduce your error:
+# You need to pull out the useful pieces, and so could run the following to reproduce your error:
+# 您需要提取出有用的部分，因此可以运行以下命令来重现您的错误:
 #
 #   valgrind --suppressions=/home/craigdo/repos/ns-3-allinone-dev/ns-3-dev/testpy.supp
 #   --leak-check=full --error-exitcode=2 /home/craigdo/repos/ns-3-allinone-dev/ns-3-dev/build/debug/utils/ns3-dev-test-runner-debug
 #   --suite=devices-mesh-dot11s-regression --basedir=/home/craigdo/repos/ns-3-allinone-dev/ns-3-dev
 #   --tempdir=testpy-output
 #
-# Hint: Use the first part of the command as is, and point the "tempdir" to
-# somewhere real.  You don't need to specify an "out" file.
+# Hint: Use the first part of the command as is, and point the "tempdir" to somewhere real.  提示: 按原样使用命令的第一部分，并将“ temdir”指向某个真实的地方。
+# You don't need to specify an "out" file.您不需要指定“ out”文件。
 #
-# When you run the above command you should see your valgrind error.  The
-# suppression expression(s) can be generated by adding the --gen-suppressions=yes
+# When you run the above command you should see your valgrind error.  当您运行上面的命令时，您应该会看到 valground 错误。
+# The suppression expression(s) can be generated by adding the --gen-suppressions=yes   抑制表达式可以通过添加--gen-suppressions=yes
 # option to valgrind.  Use something like:
 #
 #   valgrind --gen-suppressions=yes --suppressions=/home/craigdo/repos/ns-3-allinone-dev/ns-3-dev/testpy.supp
@@ -769,23 +786,23 @@ def make_paths():
 #     the rest of the stack frame
 #     ...
 #   }
-#
-# You need to add a supression name which will only be printed out by valgrind in
-# verbose mode (but it needs to be there in any case).  The entire stack frame is
-# shown to completely characterize the error, but in most cases you won't need
-# all of that info.  For example, if you want to turn off all errors that happen
-# when the function (fun:) is called, you can just delete the rest of the stack
-# frame.  You can also use wildcards to make the mangled signatures more readable.
-#
+#您需要添加一个只能在详细模式下由 valGraduate 打印出来的压制名称(但是在任何情况下都需要有这个名称)。
+# You need to add a supression name which will only be printed out by valgrind in verbose mode (but it needs to be there in any case).  
+# The entire stack frame is shown to completely characterize the error, but in most cases you won't need all of that info.  
+# 整个堆栈框架被显示为完全描述错误，但在大多数情况下，您不需要所有这些信息。
+# For example, if you want to turn off all errors that happen hen the function (fun:) is called, you can just delete the rest of the stack frame.  
+# 例如，如果要关闭调用函数(fun:)时发生的所有错误，只需删除堆栈帧的其余部分。
+# You can also use wildcards to make the mangled signatures more readable.
+#您还可以使用通配符使损坏的签名更具可读性。
 # I added the following to the testpy.supp file for this particular error:
-#
+#对于这个特定的错误，我在 testpy.Supp 文件中添加了以下内容:
 #   {
 #     Suppress invalid read size errors in SendPreq() when using HwmpProtocolMac
 #     Memcheck:Addr8
 #     fun:*HwmpProtocolMac*SendPreq*
 #   }
 #
-# Now, when you run valgrind the error will be suppressed.
+# Now, when you run valgrind the error will be suppressed.现在，当你运行 val弓的错误将被抑制。
 #
 VALGRIND_SUPPRESSIONS_FILE = "testpy.supp"
 
@@ -835,8 +852,8 @@ def run_job_synchronously(shell_command, directory, valgrind, is_python, build_p
     return (retval, stdout_results, stderr_results, elapsed_time)
 
 #
-# This class defines a unit of testing work.  It will typically refer to
-# a test suite to run using the test-runner, or an example to run directly.
+# This class defines a unit of testing work.  这个类定义了一个测试工作单元。
+# It will typically refer to a test suite to run using the test-runner, or an example to run directly.它通常引用要使用测试运行程序运行的测试套件，或者直接运行的示例。
 #
 class Job:
     def __init__(self):
@@ -856,63 +873,63 @@ class Job:
         self.build_path = ""
 
     #
-    # A job is either a standard job or a special job indicating that a worker
-    # thread should exist.  This special job is indicated by setting is_break
-    # to true.
+    # A job is either a standard job or a special job indicating that a worker thread should exist.  作业是一个标准作业或一个特殊作业，指示工作线程应该存在。
+    # This special job is indicated by setting is_break to true.这个特殊的作业通过将 is _ break 设置为 true 来表示。
+    # 
     #
     def set_is_break(self, is_break):
         self.is_break = is_break
 
     #
-    # If a job is to be skipped, we actually run it through the worker threads
-    # to keep the PASS, FAIL, CRASH and SKIP processing all in one place.
+    # If a job is to be skipped, we actually run it through the worker threads to keep the PASS, FAIL, CRASH and SKIP processing all in one place.
+    # 如果要跳过某个作业，我们实际上会在辅助线程中运行它，以便将 PASS、 FAIL、 CRASH 和 SKIP 处理集中在一个地方。
     #
     def set_is_skip(self, is_skip):
         self.is_skip = is_skip
 
     #
-    # If a job is to be skipped, log the reason.
+    # If a job is to be skipped, log the reason.如果要跳过某个作业，请记录原因。
     #
     def set_skip_reason(self, skip_reason):
         self.skip_reason = skip_reason
 
     #
-    # Examples are treated differently than standard test suites.  This is
-    # mostly because they are completely unaware that they are being run as
-    # tests.  So we have to do some special case processing to make them look
-    # like tests.
+    # Examples are treated differently than standard test suites.  示例与标准测试套件的处理方式不同。
+    # This is mostly because they are completely unaware that they are being run as tests. 这主要是因为它们完全不知道它们是作为测试运行的。 
+    # So we have to do some special case processing to make them look like tests.
+    # 因此，我们必须做一些特殊的案例处理，使它们看起来像测试。
     #
     def set_is_example(self, is_example):
         self.is_example = is_example
 
     #
-    # Examples are treated differently than standard test suites.  This is
-    # mostly because they are completely unaware that they are being run as
+    # Examples are treated differently than standard test suites.  
+    # This is mostly because they are completely unaware that they are being run as
     # tests.  So we have to do some special case processing to make them look
     # like tests.
     #
     def set_is_pyexample(self, is_pyexample):
         self.is_pyexample = is_pyexample
 
+    #这是将在作业中执行的 shell 命令。
+    # This is the shell command that will be executed in the job. 
     #
-    # This is the shell command that will be executed in the job.  For example,
-    #
-    #  "utils/ns3-dev-test-runner-debug --test-name=some-test-suite"
+    #   For example, "utils/ns3-dev-test-runner-debug --test-name=some-test-suite"
     #
     def set_shell_command(self, shell_command):
         self.shell_command = shell_command
 
     #
-    # This is the build path where ns-3 was built.  For example,
-    #
+    # This is the build path where ns-3 was built.  这是构建 ns-3的路径。
+    #  For example,
     #  "/home/craigdo/repos/ns-3-allinone-test/ns-3-dev/build/debug"
     #
     def set_build_path(self, build_path):
         self.build_path = build_path
 
     #
-    # This is the display name of the job, typically the test suite or example
-    # name.  For example,
+    # This is the display name of the job, typically the test suite or example name.  这是作业的显示名称，通常是测试套件或示例名称。
+    #  For example,
     #
     #  "some-test-suite" or "udp-echo"
     #
@@ -920,10 +937,10 @@ class Job:
         self.display_name = display_name
 
     #
-    # This is the base directory of the repository out of which the tests are
-    # being run.  It will be used deep down in the testing framework to determine
-    # where the source directory of the test was, and therefore where to find
-    # provided test vectors.  For example,
+    # This is the base directory of the repository out of which the tests are being run.  这是运行测试的存储库的基本目录。
+    # It will be used deep down in the testing framework to determine where the source directory of the test was, and therefore where to find provided test vectors.  
+    # 它将在测试框架的深层使用，以确定测试的源目录在哪里，因此在哪里可以找到提供的测试向量。
+    # For example,
     #
     #  "/home/user/repos/ns-3-dev"
     #
@@ -931,16 +948,16 @@ class Job:
         self.basedir = basedir
 
     #
-    # This is the directory to which a running test suite should write any
-    # temporary files.
+    # This is the directory to which a running test suite should write any temporary files.
+    # 
     #
     def set_tempdir(self, tempdir):
         self.tempdir = tempdir
 
     #
-    # This is the current working directory that will be given to an executing
-    # test as it is being run.  It will be used for examples to tell them where
-    # to write all of the pcap files that we will be carefully ignoring.  For
+    # This is the current working directory that will be given to an executing test as it is being run.  这是当前的工作目录，当一个正在执行的测试运行时，它将被赋予这个值。
+    # It will be used for examples to tell them where to write all of the pcap files that we will be carefully ignoring.  它将用于示例，告诉他们在哪里写入我们将小心忽略的所有 pcap 文件。
+    # For
     # example,
     #
     #  "/tmp/unchecked-traces"
@@ -949,30 +966,30 @@ class Job:
         self.cwd = cwd
 
     #
-    # This is the temporary results file name that will be given to an executing
-    # test as it is being run.  We will be running all of our tests in parallel
-    # so there must be multiple temporary output files.  These will be collected
-    # into a single XML file at the end and then be deleted.
+    # This is the temporary results file name that will be given to an executing  test as it is being run.  这是一个临时结果文件名，将在正在执行的测试运行时给予该文件名。
+    # We will be running all of our tests in parallel so there must be multiple temporary output files.  我们将并行运行所有测试，因此必须有多个临时输出文件。
+    # These will be collected into a single XML file at the end and then be deleted.这些将在最后被收集到一个单独的 XML 文件中，然后被删除。
+    # 
     #
     def set_tmp_file_name(self, tmp_file_name):
         self.tmp_file_name = tmp_file_name
 
     #
-    # The return code received when the job process is executed.
+    # The return code received when the job process is executed.执行作业进程时收到的返回代码。
     #
     def set_returncode(self, returncode):
         self.returncode = returncode
 
     #
-    # The elapsed real time for the job execution.
+    # The elapsed real time for the job execution.作业执行所经过的实时时间。
     #
     def set_elapsed_time(self, elapsed_time):
         self.elapsed_time = elapsed_time
 
 #
-# The worker thread class that handles the actual running of a given test.
-# Once spawned, it receives requests for work through its input_queue and
-# ships the results back through the output_queue.
+# The worker thread class that handles the actual running of a given test.处理给定测试的实际运行的辅助线程类。
+# Once spawned, it receives requests for work through its input_queue and ships the results back through the output_queue.
+# 派生之后，它通过 input _ queue 接收工作请求，并通过 output _ queue 将结果发送回来。
 #
 class worker_thread(threading.Thread):
     def __init__(self, input_queue, output_queue):
@@ -984,15 +1001,15 @@ class worker_thread(threading.Thread):
         while True:
             job = self.input_queue.get()
             #
-            # Worker threads continue running until explicitly told to stop with
-            # a special job.
+            # Worker threads continue running until explicitly told to stop with a special job.
+            # 辅助线程继续运行，直到被明确告知以特殊作业停止。
             #
             if job.is_break:
                 return
             #
-            # If the global interrupt handler sets the thread_exit variable,
-            # we stop doing real work and just report back a "break" in the
-            # normal command processing has happened.
+            # If the global interrupt handler sets the thread_exit variable,we stop doing real work and just report back a "break" in the  normal command processing has happened.
+            # 如果全局 interrupt handler 设置 thread _ exit 变量，我们就停止实际工作，只是报告正常命令处理中发生了“中断”。
+            #
             #
             if thread_exit == True:
                 job.set_is_break(True)
@@ -1000,8 +1017,8 @@ class worker_thread(threading.Thread):
                 continue
 
             #
-            # If we are actually supposed to skip this job, do so.  Note that
-            # if is_skip is true, returncode is undefined.
+            # If we are actually supposed to skip this job, do so.  
+            # Note that if is_skip is true, returncode is undefined.
             #
             if job.is_skip:
                 if options.verbose:
@@ -1018,8 +1035,8 @@ class worker_thread(threading.Thread):
 
                 if job.is_example or job.is_pyexample:
                     #
-                    # If we have an example, the shell command is all we need to
-                    # know.  It will be something like "examples/udp/udp-echo" or
+                    # If we have an example, the shell command is all we need to know.  如果我们有一个示例，那么我们只需要知道 shell 命令。
+                    # It will be something like "examples/udp/udp-echo" or
                     # "examples/wireless/mixed-wireless.py"
                     #
                     (job.returncode, standard_out, standard_err, et) = run_job_synchronously(job.shell_command,
@@ -1028,7 +1045,7 @@ class worker_thread(threading.Thread):
                     #
                     # If we're a test suite, we need to provide a little more info
                     # to the test runner, specifically the base directory and temp
-                    # file name
+                    # file name 如果我们是一个测试套件，我们需要提供更多的信息到测试运行程序，特别是基本目录和临时目录
                     #
                     if options.update_data:
                         update_data = '--update-data'
@@ -1051,8 +1068,8 @@ class worker_thread(threading.Thread):
                 self.output_queue.put(job)
 
 #
-# This is the main function that does the work of interacting with the
-# test-runner itself.
+# This is the main function that does the work of interacting with the test-runner itself.
+# 这是与测试运行程序本身进行交互的主要函数。
 #
 def run_tests():
     #
