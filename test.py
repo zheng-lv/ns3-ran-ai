@@ -477,9 +477,9 @@ def translate_to_html(results_file, html_file):
                     f.write("</td>\n")
             else:
                 #
-                # If this particular test case passed, then we just print the PASS
-                # result in green, followed by the test case name and its execution
-                # time information.  These go off in <td> ... </td> table data.
+                # If this particular test case passed, then we just print the PASS result in green, followed by the test case name and its execution time information. 
+                # 
+                #  These go off in <td> ... </td> table data.
                 # The details table entry is left blank.
                 #
                 #   +--------+----------------+------+---------+
