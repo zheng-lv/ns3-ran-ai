@@ -13,13 +13,13 @@ from pygccxml.declarations.free_calldef import free_function_t
 from pygccxml.declarations.calldef_members import constructor_t, member_function_t
 from pygccxml.declarations.calldef import calldef_t
 
-## we need the smart pointer type transformation to be active even
-## during castxml scanning.
+## we need the smart pointer type transformation to be active even during castxml scanning.
+## 我们需要智能指针类型转换处于活动状态，即使在 castxml 扫描期间也是如此。
 import ns3modulegen_core_customizations
 
 
-## silence castxmlparser errors; we only want error handling in the
-## generated python script, not while scanning.
+## silence castxmlparser errors; we only want error handling in the generated python script, not while scanning.
+## 静默 castxmlparser 错误; 我们只希望在生成的 python 脚本中进行错误处理，而不希望在扫描时进行。
 class ErrorHandler(pybindgen.settings.ErrorHandler):
     def handle_error(self, dummy_wrapper, dummy_exception, dummy_traceback_):
         return True
