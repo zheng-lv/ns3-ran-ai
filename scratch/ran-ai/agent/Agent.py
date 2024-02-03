@@ -13,6 +13,7 @@ class CentralizedAgent(object):
     class Agent
     It implements a learning Agent that has to manage a certain environment
     in order to maximize the expected discounted return
+    它实现了一个学习代理，该代理必须管理特定的环境为了使预期的折现收益最大化
     """
 
     def __init__(self,
@@ -61,8 +62,8 @@ class CentralizedAgent(object):
         self.max_penalty = None
 
         # Primary and target networks used in the training
-        # The primary network is used to choose new actions
-        # The target network is used to predict the future q values
+        # The primary network is used to choose new actions主网络用于选择新的操作
+        # The target network is used to predict the future q values目标网络被用来预测未来的 q 值
 
         self.primary_net: Module = LinearNeuralNetwork(self.learning_state_dim, self.action_num)
         target_net: Module = LinearNeuralNetwork(self.learning_state_dim, self.action_num)
@@ -192,7 +193,7 @@ class CentralizedAgent(object):
         if train:
 
             # If the state variable is not None, store the new transition in the replay memory
-
+            #如果状态变量不是 Nothing，则将新的转换存储在重播内存中
             if self.states[0] is not None:
                 for user_idx in range(self.user_num):
                     self.dql.store_transition(np.copy(self.old_states[user_idx]),
