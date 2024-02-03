@@ -1,9 +1,9 @@
 from ctypes import *
 
 
-# The environment is shared between ns-3
-# and python with the same shared memory
-# using the ns3-ai model.
+# The environment is shared between ns-3 and python with the same shared memory using the ns3-ai model.
+# 使用 ns3-ai 模型，使用相同的共享内存在 ns-3和 python 之间共享环境。
+# 
 
 class Env(Structure):
     _pack_ = 1
@@ -12,8 +12,8 @@ class Env(Structure):
     ]
 
 
-# The result is calculated by python
-# and put back to ns-3 with the shared memory.
+# The result is calculated by python and put back to ns-3 with the shared memory.
+# 结果由 python 计算，然后用共享内存放回 ns-3。
 
 class Act(Structure):
     _pack_ = 1
@@ -22,7 +22,7 @@ class Act(Structure):
     ]
 
 
-mempool_key = 1234  # memory pool key, arbitrary integer large than 1000
+mempool_key = 1234  # memory pool key, arbitrary integer large than 1000 存池键，任意整数大于1000
 mem_size = 40960  # memory pool size in bytes
 memblock_key = 2333  # memory block key, need to keep the same in the ns-3 script
 
