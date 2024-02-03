@@ -115,29 +115,18 @@ class CentralizedAgent(object):
         self.old_states = [None] * self.user_num
         self.old_actions = [None] * self.user_num
 
-    def get_action(self,
-                   states: [np.ndarray],
-                   temp: float):
-
+    def get_action(self,states: [np.ndarray],temp: float):
         """
         Choose an action according to the epsilon-greedy policy
         """
-
         assert 0 <= temp <= 1
-
         actions, q_values = [], []
-
         for user_idx, state in enumerate(states):
-
             x = torch.tensor(state[self.state_mask], dtype=torch.float32)
-
             # Estimate the q values of the input state
-
             with torch.no_grad():
                 user_q_values = self.primary_net.forward(x).detach().numpy()
-
             # Choose an action according to the epsilon greedy policy
-
             if np.random.uniform() - temp > 0:
                 user_action = np.argmax(user_q_values, 0)  # Greedy action
             else:
@@ -163,13 +152,9 @@ class CentralizedAgent(object):
         """
 
         self.data_idx += 1
-
         self.temperature_data[self.data_idx] = temp
-
         for user_idx in range(self.user_num):
-
             # Update the learning data
-
             action_vector = np.zeros(self.action_num)
             action_vector[action_indexes[user_idx]] = 1
             self.action_data[user_idx, :, self.data_idx] = action_vector
@@ -182,7 +167,6 @@ class CentralizedAgent(object):
             self.chamfer_data[user_idx, self.data_idx] = cd_per_user[user_idx]
 
         # Update the transition variables
-
         self.old_states = [copy.copy(new_state) for new_state in self.states]
         self.old_actions = [copy.copy(new_state) for new_state in self.actions]
 
@@ -191,7 +175,6 @@ class CentralizedAgent(object):
         self.states = [new_state[self.state_mask] for new_state in states]
 
         if train:
-
             # If the state variable is not None, store the new transition in the replay memory
             #如果状态变量不是 Nothing，则将新的转换存储在重播内存中
             if self.states[0] is not None:
@@ -205,9 +188,7 @@ class CentralizedAgent(object):
 
             if self.dql.ready():
                 loss = self.dql.step()
-
                 # Update the algorithm loss
-
                 self.loss_data[self.data_idx] = loss
 
     def save_data(self, data_folder: str):
