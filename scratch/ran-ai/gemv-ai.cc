@@ -133,10 +133,10 @@ main (int argc, char *argv[])
 
   char buffer[256];
   std::cout << "Current path is " << getcwd (buffer, sizeof (buffer)) << std::endl;
-  gemv->SetPath (gemvTracesPath);
-  Time timeRes = MilliSeconds (100);
-  gemv->SetTimeResolution (timeRes);
-  Time maxSimTime = gemv->GetMaxSimulationTime ();
+  gemv->SetPath (gemvTracesPath); //该行代码设置了 GEMV 模型的路径，即指定了 GEMV 模型所需要的轨迹文件的路径。这些轨迹文件包含了模拟车辆移动和环境变化的数据，用于模拟实际环境中的信号传播情况。
+  Time timeRes = MilliSeconds (100); //这行代码定义了时间分辨率 timeRes，以毫秒为单位。时间分辨率表示 GEMV 模型在仿真中模拟车辆移动和信号变化的时间间隔。
+  gemv->SetTimeResolution (timeRes);//该行代码设置了 GEMV 模型的时间分辨率，即将之前定义的时间分辨率应用到 GEMV 模型中，以便在仿真中模拟车辆移动和信号变化的时间间隔。
+  Time maxSimTime = gemv->GetMaxSimulationTime (); //这行代码获取了 GEMV 模型的最大仿真时间 maxSimTime，即可以模拟的轨迹数据所涵盖的最长时间段。通常，最大仿真时间由轨迹文件中记录的数据所决定。
   if (Seconds (simDuration) <= maxSimTime)
     {
       maxSimTime = Seconds (simDuration);
@@ -212,17 +212,17 @@ main (int argc, char *argv[])
   NS_ABORT_MSG_IF (ueNodes.GetN () < 1, "At least one UE is required");
 
   // Install Mobility Model
-  // NB: mobility of vehicular nodes is already taken into account in GEMV 
-  // traces, we use a constant position mobility model
+  // NB: mobility of vehicular nodes is already taken into account in GEMV traces, we use a constant position mobility model
+  // 在 GEMV 轨迹中已经考虑了车辆节点的移动性，我们使用了一个恒定位置的移动性模型
   MobilityHelper mobility;
   mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   mobility.Install (NodeContainer (rsuNodes, ueNodes));
   
-  // Manually create a new SpectrumChannel and add the GemvPropagationLossModel
+  // Manually create a new SpectrumChannel and add the GemvPropagationLossModel 手动创建一个新的光谱通道并添加 Gemv 传播损失模型
   Ptr<MultiModelSpectrumChannel> channel = CreateObject<MultiModelSpectrumChannel> ();
   channel->AddPropagationLossModel (gemv);
   
-  // Create the MmWaveHelper and manually set the SpectrumChannel to be used
+  // Create the MmWaveHelper and manually set the SpectrumChannel to be used 创建 MmWaveHelper 并手动设置要使用的光谱通道
   Ptr<MmWaveHelper> mmWaveHelper = CreateObject<MmWaveHelper> ();
   Ptr<MmWavePointToPointEpcHelper>  epcHelper = CreateObject<MmWavePointToPointEpcHelper> ();
   mmWaveHelper->SetEpcHelper (epcHelper);
@@ -230,7 +230,7 @@ main (int argc, char *argv[])
   
   Ptr<Node> pgw = epcHelper->GetPgwNode ();
 
-  // Create a single RemoteHost
+  // Create a single RemoteHost创建单个 RemoteHost
   Ptr<Node> remoteHost = CreateObject<Node> ();
   InternetStackHelper internet;
   internet.Install (remoteHost);
@@ -244,7 +244,7 @@ main (int argc, char *argv[])
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
   Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
-  // interface 0 is localhost, 1 is the p2p device
+  // interface 0 is localhost, 1 is the p2p device 接口0是本地主机，1是 p2p 设备
   Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
 
   Ipv4StaticRoutingHelper ipv4RoutingHelper;
@@ -254,24 +254,24 @@ main (int argc, char *argv[])
   NetDeviceContainer rsuDevs = mmWaveHelper->InstallSub6EnbDevice (rsuNodes);
   NetDeviceContainer ueDevs = mmWaveHelper->InstallSub6UeDevice (ueNodes);
   
-  // Install the IP stack on the UEs
+  // Install the IP stack on the UEs 在 UE 上安装 IP 堆栈
   internet.Install (ueNodes);
   Ipv4InterfaceContainer ueIpIface;
   ueIpIface = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueDevs));
   
-  // Assign IP address to UEs, and install applications
+  // Assign IP address to UEs, and install applications 将 IP 地址分配给 UE，并安装应用程序
   for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
     {
       Ptr<Node> ueNode = ueNodes.Get (u);
-      // Set the default gateway for the UE
+      // Set the default gateway for the UE 设置 UE 的默认网关
       Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNode->GetObject<Ipv4> ());
       ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
     }
 
-  // Attach the UEs to the RSU
+  // Attach the UEs to the RSU 将 UE 连接到 RSU
   mmWaveHelper->AttachToClosestEnb (ueDevs, rsuDevs);
 
-  // Install and start applications on UEs and remote host
+  // Install and start applications on UEs and remote host 在 UE 和远程主机上安装和启动应用程序
   uint16_t dlPort = 1000;
   uint16_t ulPort = 2000;
   ApplicationContainer clientApps;
@@ -296,7 +296,7 @@ main (int argc, char *argv[])
 
       clientApps.Add (dlClient.Install (remoteHost));
 
-      // Set up UL Application
+      // Set up UL Application 建立 UL 应用程序
 
       if (appType == "classic")
         {
@@ -368,8 +368,8 @@ main (int argc, char *argv[])
   serverApps.Start (MilliSeconds (10));
   clientApps.Start (MilliSeconds (100));
   clientApps.Stop (maxSimTime - Seconds (2.0));
-  // Enable trace collection and install RAN-AI on each eNB in the scenario 
-  // This must be done in this order, otherwise the RAN-AI does not receive any information
+  // Enable trace collection and install RAN-AI on each eNB in the scenario  在场景中启用跟踪收集并在每个 eNB 上安装 RAN-AI
+  // This must be done in this order, otherwise the RAN-AI does not receive any information 这必须按照这个顺序完成，否则 RAN-AI 不会接收到任何信息
   mmWaveHelper->EnableRlcTraces ();
   mmWaveHelper->EnablePdcpTraces ();
   if (writeToFile)
@@ -385,10 +385,10 @@ main (int argc, char *argv[])
       }
       else
       {
-        // Install a fake RAN AI
-        // In this case, the RAN AI is not created, but the reporting cycle is 
-        // enabled anyway. The statistics that the gNB sends to the RAN AI are 
-        // collected in a file called "RanAiStats.txt".
+        // Install a fake RAN AI 安装一个假的 RAN AI
+        // In this case, the RAN AI is not created, but the reporting cycle is enabled anyway. The statistics that the gNB sends to the RAN AI are  collected in a file called "RanAiStats.txt".
+        // 在这种情况下，RAN AI 没有被创建，但是报告周期还是启用了。GNB 发送给 RAN AI 的统计信息收集在一个名为“ RanAiStats.txt”的文件中。
+        // 此选项用于创建脱机训练 RL 代理的数据集
         // This option is used to create a dataset to train the RL agent offline
         mmWaveHelper->InstallFakeRanAI (rsuDevs, imsiApplication, statsCalculator);        
       }
