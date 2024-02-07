@@ -117,7 +117,7 @@ class CentralizedAgent(object):
 
     def get_action(self,states: [np.ndarray],temp: float):
         """
-        Choose an action according to the epsilon-greedy policy
+        Choose an action according to the epsilon-greedy policy 根据贪婪策略选择一个动作
         """
         assert 0 <= temp <= 1
         actions, q_values = [], []
@@ -148,7 +148,7 @@ class CentralizedAgent(object):
                train: bool):
 
         """
-        Update the learning data of the agent
+        Update the learning data of the agent 更新代理的学习数据
         """
 
         self.data_idx += 1
@@ -184,7 +184,7 @@ class CentralizedAgent(object):
                                               self.rewards[user_idx],
                                               np.copy(self.states[user_idx]))
 
-            # If the replay memory is full, perform a learning step
+            # If the replay memory is full, perform a learning step 如果重放内存已满，请执行学习步骤
 
             if self.dql.ready():
                 loss = self.dql.step()
@@ -304,12 +304,16 @@ class CentralizedAgent(object):
                         plot_format=self.format)
 
             ### SINGLE FEATURE PLOT ###
-
+            
+            # 设置用户文件夹路径
             user_folder = data_folder + '/state/' + str(user_idx) + '/'
-
+            
+            # 遍历每个状态特征
             for i in range(self.state_dim):
+                # 获取状态特征的归一化范围
                 min_value, max_value = self.state_normalization[i]
-
+            
+                # 计算并绘制单个状态特征的线性图
                 linear_plot(self.state_data[user_idx, i, :self.data_idx] * (max_value - min_value) + min_value,
                             'Episode',
                             self.state_labels[i],
@@ -318,7 +322,11 @@ class CentralizedAgent(object):
                             palette=single_palette,
                             plot_format=self.format)
 
+
             ### PERFORMANCE PLOT ###
+            '''设置用户文件夹路径，以便保存每个用户的性能图。
+            绘制 Chamfer Distance 的线性图：横轴为训练周期（Episode），纵轴为 Chamfer Distance，表示模型预测结果与真实值之间的差距。
+            计算并绘制 QoE 的线性图：横轴为训练周期（Episode），纵轴为 QoE（Quality of Experience），表示用户体验质量的指标，通过将最大惩罚值减去 Chamfer Distance 后除以最大惩罚值得到。'''
 
             user_folder = data_folder + '/performance/' + str(user_idx) + '/'
 
@@ -371,13 +379,13 @@ class CentralizedAgent(object):
                           palette=action_palette,
                           plot_format=self.format)
 
-        # Actions
+        # Actions 用于绘制多个动作在训练周期内的概率变化情况
 
         action_data = np.mean(self.action_data, axis=0)
-
+            # 提取每个动作在每个时间步的平均概率数据
         multi_data = [action_data[i, :self.data_idx] for i in range(self.action_num)]
         multi_keys = self.action_labels
-
+            # 绘制多线图，展示每个动作在训练周期内的概率变化情况
         multi_linear_plot(multi_data,
                           multi_keys,
                           'Episode',
@@ -419,13 +427,13 @@ class CentralizedAgent(object):
                     palette=single_palette,
                     plot_format=self.format)
 
-        # Single feature
+        # Single feature 用于计算和绘制单个特征随着时间的变化图
 
         for i in range(self.state_dim):
             min_value, max_value = self.state_normalization[i]
 
             state_data = np.mean(self.state_data, axis=0)
-
+            # 计算并绘制单个特征随时间的变化图
             linear_plot(state_data[i, :self.data_idx] * (max_value - min_value) + min_value,
                         'Episode',
                         self.state_labels[i],
@@ -434,7 +442,7 @@ class CentralizedAgent(object):
                         palette=single_palette,
                         plot_format=self.format)
 
-        # QoS
+        # QoS 绘制QoS（Quality of Service）随时间的变化图
 
         qos_data = np.mean(self.qos_data, axis=0)
 
@@ -446,22 +454,27 @@ class CentralizedAgent(object):
                     palette=single_palette,
                     plot_format=self.format)
 
-        # QoE
+ # QoE
 
-        chamfer_data = np.mean(self.chamfer_data, axis=0)
+chamfer_data = np.mean(self.chamfer_data, axis=0) #计算Chamfer距离在每个时间步的平均值，得到一个时间序列。
 
-        linear_plot(chamfer_data[:self.data_idx],
-                    'Episode',
-                    'Chamfer Distance',
-                    episode_num,
-                    data_folder + 'performance/chamfer_distances',
-                    palette=single_palette,
-                    plot_format=self.format)
+# 绘制Chamfer距离随时间的变化图
+'''绘制Chamfer距离随时间的变化图，横轴为训练周期（Episode），纵轴为Chamfer距离，用于分析模型训练过程中Chamfer距离的变化情况。'''
+linear_plot(chamfer_data[:self.data_idx],
+            'Episode',
+            'Chamfer Distance',
+            episode_num,
+            data_folder + 'performance/chamfer_distances',
+            palette=single_palette,
+            plot_format=self.format)
 
-        linear_plot((self.max_penalty - chamfer_data[:self.data_idx]) / self.max_penalty,
-                    'Episode',
-                    'QoE',
-                    episode_num,
-                    data_folder + 'performance/qoe',
-                    palette=single_palette,
-                    plot_format=self.format)
+# 计算并绘制QoE（Quality of Experience）随时间的变化图
+''' 计算并绘制QoE（Quality of Experience）随时间的变化图，其中QoE定义为最大处罚值与Chamfer距离的差值除以最大处罚值。这个指标用于评估模型的性能，即体验质量的改善情况。'''
+linear_plot((self.max_penalty - chamfer_data[:self.data_idx]) / self.max_penalty,
+            'Episode',
+            'QoE',
+            episode_num,
+            data_folder + 'performance/qoe',
+            palette=single_palette,
+            plot_format=self.format)
+
