@@ -1,4 +1,4 @@
-```python
+
 from mmwave_gemv_integration_campaigns import *  # 导入模拟运行相关的自定义模块
 import sem  # 导入sem库，用于管理模拟运行
 import numpy as np  # 导入NumPy库，用于数值计算
@@ -43,4 +43,4 @@ for result_entry in results:
 num_errors = sum(errors)  # 计算错误数量总和
 # 打印错误信息统计结果
 print(f'Overall, we have {num_errors} errors out of {len(results)} simulations!')
-```
+
